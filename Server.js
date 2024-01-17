@@ -17,10 +17,7 @@ const sessionDonationRoutes = require('./routes/SessionDonationRoutes')
 const corse = require('cors')
 const cookieParser = require('cookie-parser');
 app.use(express.json());
-app.use(corse({
-  origin: process.env.FRONTEND_ORIGIN || 'https://yum-yard-client.vercel.app', // Update with your frontend URL
-  credentials: true,
-}));
+app.use(corse());
 app.use(cookieParser());
 app.get("/", (req, res) => {
   res.send("server working");
