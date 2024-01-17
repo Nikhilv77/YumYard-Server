@@ -50,9 +50,9 @@ const placeOrder = router.post("/placeorder", async (req, res) => {
       line_items: lineItems,
       mode: "payment",
       success_url:
-        "http://localhost:3000/OrderSuccessful?session_id={CHECKOUT_SESSION_ID}",
+        "https://yum-yard-client.vercel.app/OrderSuccessful?session_id={CHECKOUT_SESSION_ID}",
       cancel_url:
-        "http://localhost:3000/OrderFailed?session_id={CHECKOUT_SESSION_ID}&success=false",
+        "https://yum-yard-client.vercel.app/OrderFailed?session_id={CHECKOUT_SESSION_ID}&success=false",
     });
 
     if (session) {
