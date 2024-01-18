@@ -16,7 +16,7 @@ const sessionOrderRoutes=require('./routes/SessionOrderRoutes')
 const sessionDonationRoutes = require('./routes/SessionDonationRoutes')
 const cors = require('cors');
 const corsOptions = {
-  origin: 'https://yumyard.vercel.app',
+  origin: 'https://yumyard.onrender.com',
   credentials: true,
 };
 
