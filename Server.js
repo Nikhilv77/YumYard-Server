@@ -18,17 +18,7 @@ const cors = require('cors');
 
 const cookieParser = require('cookie-parser');
 app.use(express.json());
-const corsOptions = {
-  origin: 'https://yum-yard-client.vercel.app', 
-  credentials: true,
-};
-
-app.use(cors(corsOptions));
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Origin', 'https://yum-yard-client.vercel.app'); 
-  next();
-});
+app.use(cors());
 app.use(cookieParser());
 app.get("/", (req, res) => {
   res.send("server working");
