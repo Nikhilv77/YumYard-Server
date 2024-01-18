@@ -22,6 +22,7 @@ const htmlToPdfBuffer = async (html) => {
 
 const placeOrder = router.post("/placeorder", async (req, res) => {
   console.log("logged from placeorder");
+  console.log(`${process.env.STRIPE_API}`)
   const { currUser, cartItems, totalPrice, userAddress } = req.body;
 
   const totalAmountWithShipping = totalPrice + 20;
