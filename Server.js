@@ -22,13 +22,6 @@ const corsOptions = {
 
 const cookieParser = require('cookie-parser');
 app.use(express.json());
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'your-frontend-url');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});
-
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.get("/", (req, res) => {
