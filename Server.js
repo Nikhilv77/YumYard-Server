@@ -17,7 +17,7 @@ const sessionDonationRoutes = require('./routes/SessionDonationRoutes')
 const news = require('./routes/NewsRoutes')
 const cors = require('cors');
 const corsOptions = {
-  origin: ['https://yumyard.onrender.com', 'https://yumyard.vercel.app'],
+  origin: ['https://yumyard.onrender.com', 'https://yumyard.vercel.app',"http://localhost:3000"],
   credentials: true,
 };
 const cookieParser = require('cookie-parser');
