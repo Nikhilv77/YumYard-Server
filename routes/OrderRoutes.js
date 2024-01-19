@@ -4,20 +4,18 @@ const router = express.Router();
 const { v4: uuidv4 } = require("uuid");
 const Order = require("../Models/OrderModel");
 const sessionOrderSchema = require("../Models/SessionOrderModel");
+const puppeteer = require("puppeteer");
 const stripe = require("stripe")(
   `${process.env.STRIPE_API}`
 );
 let newOrder;
 const htmlToPdfBuffer = async (html) => {
-  return new Promise((resolve, reject) => {
-    htmlToPdf.create(html).toBuffer((err, buffer) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(buffer);
-      }
-    });
-  });
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  await page.setContent(html);
+  const pdfBuffer = await page.pdf({ format: "A4" });
+  await browser.close();
+  return pdfBuffer;
 };
 
 const placeOrder = router.post("/placeorder", async (req, res) => {
