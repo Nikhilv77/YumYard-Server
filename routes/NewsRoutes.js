@@ -5,7 +5,7 @@ const getNews = router.post('/getNews', async (req, res) => {
   console.log("logged from news");
   try {
     const apiKey = req.body.apiKey; 
-    const apiUrl = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=${apiKey}`;
+    const apiUrl = `https://newsdata.io/api/1/news?apikey=${apiKey}&q=food`;
 
     const response = await axios.get(apiUrl, {
       headers: {
