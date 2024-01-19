@@ -85,7 +85,7 @@ const placeOrder = router.post("/placeorder", async (req, res) => {
         transactionId: session.id,
         receiptPDF: pdfBuffer,
       });
-      console.log(newOrder);
+      console.log(newOrder,"i was creating the issue");
       await newOrder.save();
       res.json({ id: session.id });
     } else {
