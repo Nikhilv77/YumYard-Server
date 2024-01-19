@@ -62,7 +62,7 @@ const placeOrder = router.post("/placeorder", async (req, res) => {
         cartItems,
         totalAmountWithShipping
       );
-      console.log(session);
+      console.log(session,"sessionsssdf");
 
       const pdfBuffer = await htmlToPdfBuffer(receiptHtml);
 
@@ -85,6 +85,7 @@ const placeOrder = router.post("/placeorder", async (req, res) => {
         transactionId: session.id,
         receiptPDF: pdfBuffer,
       });
+      console.log(newOrder);
       await newOrder.save();
       res.json({ id: session.id });
     } else {
