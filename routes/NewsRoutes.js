@@ -1,15 +1,13 @@
+const axios = require('axios')
 const express = require('express');
 const router = express.Router();
-const fetch = require('node-fetch'); 
-
 const getNews = router.post('/getNews', async (req, res) => {
   console.log("logged from news");
   try {
     const apiKey = req.body.apiKey; 
     const apiUrl = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=${apiKey}`;
 
-    const response = await fetch(apiUrl, {
-      method: 'GET',
+    const response = await axios.get(apiUrl, {
       headers: {
         'Content-Type': 'application/json',
       },
