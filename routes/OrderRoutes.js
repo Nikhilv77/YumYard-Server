@@ -24,6 +24,7 @@ const placeOrder = router.post("/placeorder", async (req, res) => {
   console.log("logged from placeorder");
   console.log(`${process.env.STRIPE_API}`)
   const { currUser, cartItems, totalPrice, userAddress } = req.body;
+  console.log(totalPrice);
 
   const totalAmountWithShipping = totalPrice + 20;
   const lineItems = cartItems.map((cartItem) => ({
@@ -52,9 +53,9 @@ const placeOrder = router.post("/placeorder", async (req, res) => {
       line_items: lineItems,
       mode: "payment",
       success_url:
-        "https://yumyard.onrender.com/OrderSuccessful?session_id={CHECKOUT_SESSION_ID}",
+        "https://yumyard.vercel.com/OrderSuccessful?session_id={CHECKOUT_SESSION_ID}",
       cancel_url:
-        "https://yumyard.onrender.com/OrderFailed?session_id={CHECKOUT_SESSION_ID}&success=false",
+        "https://yumyard.vercel.com/OrderFailed?session_id={CHECKOUT_SESSION_ID}&success=false",
     });
 
     if (session) {
