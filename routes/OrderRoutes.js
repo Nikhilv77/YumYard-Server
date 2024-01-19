@@ -10,7 +10,7 @@ const stripe = require("stripe")(
 );
 let newOrder;
 const htmlToPdfBuffer = async (html) => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({ headless: "new" });
   const page = await browser.newPage();
   await page.setContent(html);
   const pdfBuffer = await page.pdf({ format: "A4" });
