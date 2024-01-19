@@ -62,6 +62,7 @@ const placeOrder = router.post("/placeorder", async (req, res) => {
         cartItems,
         totalAmountWithShipping
       );
+      console.log(session);
 
       const pdfBuffer = await htmlToPdfBuffer(receiptHtml);
 
