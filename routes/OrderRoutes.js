@@ -2,37 +2,30 @@ const express = require("express");
 const router = express.Router();
 const { v4: uuidv4 } = require("uuid");
 const Order = require("../Models/OrderModel");
+const htmlToPdf = require('html-pdf')
 const sessionOrderSchema = require("../Models/SessionOrderModel");
-const pdf = require("pdf-creator-node");
 const stripe = require("stripe")(
   `${process.env.STRIPE_API}`
 );
 let newOrder;
 
-const htmlToPdfBuffer = async (html) => {
-  var options = {
-    format: "A4",
-    orientation: "portrait",
-  };
-  var document = {
-    html: html,
-    data: {
-   
-    },
-    type: "buffer",
-  };
-  
-    pdf
-    .create(document, options)
-    .then((res) => {
-      console.log(res,"pdf logged");
-      return res
-    })
-    .catch((error) => {
-      console.error(error);
-      console.log("pdf error coming");
-    });
+const generatePdf = (html) => {
+  return new Promise((resolve, reject) => {
+    try {
+      htmlToPdf.create(html).toBuffer((err, buffer) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(buffer);
+        }
+      });
+    } catch (error) {
+      console.log(error,"here error logged");
+      reject(error);
+    }
+  });
 };
+
 
 const placeOrder = router.post("/placeorder", async (req, res) => {
   console.log("logged from placeorder");
