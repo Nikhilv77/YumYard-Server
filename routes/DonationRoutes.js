@@ -17,8 +17,8 @@ const generateReceiptPDF = (htmlReceipt) => {
       pdfDoc.on("end", () => resolve(Buffer.concat(buffers)));
       pdfDoc.on("error", (error) => reject(error));
 
-      // Embed the HTML content in the PDF using createHTMLStream
-      pdfDoc.pipe(pdfDoc.createHTMLStream()).end(htmlReceipt);
+      // Embed the HTML content in the PDF
+      pdfDoc.text(htmlReceipt);
 
       // Finalize the PDF
       pdfDoc.end();
@@ -28,7 +28,6 @@ const generateReceiptPDF = (htmlReceipt) => {
     }
   });
 };
-
 
 const donateRoute = router.post('/donate',async(req,res)=>{
 const name = req.body.name;

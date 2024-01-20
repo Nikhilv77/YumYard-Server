@@ -9,7 +9,7 @@ const stripe = require("stripe")(
 );
 let newOrder;
 
-const generateReceiptPDF = (htmlReceipt) => {
+const generateReceiptPDF = (receiptHTML) => {
   return new Promise((resolve, reject) => {
     try {
       const buffers = [];
@@ -19,9 +19,8 @@ const generateReceiptPDF = (htmlReceipt) => {
       pdfDoc.on("end", () => resolve(Buffer.concat(buffers)));
       pdfDoc.on("error", (error) => reject(error));
 
-      // Embed the HTML content in the PDF using createHTMLStream
-      pdfDoc.pipe(pdfDoc.createHTMLStream()).end(htmlReceipt);
-
+      // Embed the HTML content in the PDF
+      pdfDoc.text(receiptHTML);
       // Finalize the PDF
       pdfDoc.end();
     } catch (error) {
@@ -30,7 +29,6 @@ const generateReceiptPDF = (htmlReceipt) => {
     }
   });
 };
-
 
 
 const placeOrder = router.post("/placeorder", async (req, res) => {
