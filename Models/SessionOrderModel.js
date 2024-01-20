@@ -10,7 +10,7 @@ const sessionOrderSchema = mongoose.Schema({
     isDelivered:{type:Boolean,required:true, default:false},
     isCancelled:{type:Boolean,required:true,default:false},
     transactionId:{type:String,required:true},
-    receiptPDF:{type:Buffer,required:true}
+    // receiptPDF:{type:Buffer,required:true}
 },{timestamps:true})
 
 module.exports = mongoose.model('session-orders',sessionOrderSchema)
