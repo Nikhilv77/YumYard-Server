@@ -64,7 +64,7 @@ const placeOrder = router.post("/placeorder", async (req, res) => {
       line_items: lineItems,
       mode: "payment",
       success_url:
-        "https://yumyard.vercel.com/OrderSuccessful?session_id={CHECKOUT_SESSION_ID}",
+        "https://yumyard.vercel.com/cart",
       cancel_url:
         "https://yumyard.vercel.com/OrderFailed?session_id={CHECKOUT_SESSION_ID}&success=false",
     });
