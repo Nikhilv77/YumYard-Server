@@ -3,23 +3,34 @@ const router = express.Router();
 const { v4: uuidv4 } = require("uuid");
 const Order = require("../Models/OrderModel");
 const sessionOrderSchema = require("../Models/SessionOrderModel");
-const puppeteer = require("puppeteer");
+const pdf = require("pdf-creator-node");
 const stripe = require("stripe")(
   `${process.env.STRIPE_API}`
 );
 let newOrder;
+
 const htmlToPdfBuffer = async (html) => {
-  try {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.setContent(html);
-    const pdfBuffer = await page.pdf({path : '', format: "A4",printBackground:true });
-    await browser.close();
-    return pdfBuffer;
-  } catch (error) {
-    console.error("Error in htmlToPdfBuffer:", error);
-    throw error; 
-  }
+  var options = {
+    format: "A4",
+    orientation: "portrait",
+  };
+  var document = {
+    html: html,
+    data: {
+   
+    },
+    type: "buffer",
+  };
+  
+    pdf
+    .create(document, options)
+    .then((res) => {
+      console.log(res,"pdf logged");
+      return res
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 };
 
 const placeOrder = router.post("/placeorder", async (req, res) => {
