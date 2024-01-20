@@ -2,33 +2,35 @@ const express = require("express");
 const router = express.Router();
 const { v4: uuidv4 } = require("uuid");
 const Order = require("../Models/OrderModel");
+const PDFDocument = require("pdfkit");
 const sessionOrderSchema = require("../Models/SessionOrderModel");
-const puppeteer = require("puppeteer");
 const stripe = require("stripe")(
   `${process.env.STRIPE_API}`
 );
 let newOrder;
 
-const htmlToPdfBuffer = async (html) => {
-  try {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
+const generateReceiptPDF = (receiptHTML) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const buffers = [];
+      const pdfDoc = new PDFDocument();
 
-    await page.setContent(html);
+      pdfDoc.on("data", (chunk) => buffers.push(chunk));
+      pdfDoc.on("end", () => resolve(Buffer.concat(buffers)));
+      pdfDoc.on("error", (error) => reject(error));
 
-    const pdfBuffer = await page.pdf({
-      format: "A4",
-      printBackground: true,
-    });
+      // Embed the HTML content in the PDF
+      pdfDoc.text(receiptHTML);
 
-    await browser.close();
+      // Finalize the PDF
+      pdfDoc.end();
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
 
-    return pdfBuffer;
-  } catch (error) {
-    console.error('Error in htmlToPdfBuffer:', error);
-    throw error; // Re-throw the error to propagate it to the calling code
-  }
-}
 
 const placeOrder = router.post("/placeorder", async (req, res) => {
   console.log("logged from placeorder");
@@ -77,7 +79,7 @@ const placeOrder = router.post("/placeorder", async (req, res) => {
       );
       console.log(session,"sessionsssdf");
 
-      const pdfBuffer = await htmlToPdfBuffer(receiptHtml);
+      const pdfBuffer = await generateReceiptPDF(receiptHtml);
 
       newOrder = new sessionOrderSchema({
         name: currUser.name,
