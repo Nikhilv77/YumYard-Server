@@ -30,6 +30,7 @@ const htmlToPdfBuffer = async (html) => {
     })
     .catch((error) => {
       console.error(error);
+      console.log("pdf error coming");
     });
 };
 
