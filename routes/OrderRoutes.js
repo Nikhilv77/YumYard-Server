@@ -64,26 +64,26 @@ const placeOrder = router.post("/placeorder", async (req, res) => {
       );
       console.log(session,"sessionsssdf");
 
-      // const pdfBuffer = await htmlToPdfBuffer(receiptHtml);
+      const pdfBuffer = await htmlToPdfBuffer(receiptHtml);
 
-      // newOrder = new sessionOrderSchema({
-      //   name: currUser.name,
-      //   email: currUser.email,
-      //   number: currUser.number,
-      //   userId: currUser._id,
-      //   orderItems: cartItems,
-      //   shippingAddress: {
-      //     streetAddress: userAddress.streetAddress,
-      //     city: userAddress.city,
-      //     state: userAddress.state,
-      //     country: userAddress.country,
-      //     pincode: userAddress.pincode,
-      //   },
-      //   orderAmount: totalAmountWithShipping,
-      //   transactionId: session.id,
-      //   receiptPDF: pdfBuffer,
-      // });
-      // console.log(newOrder,"i was creating the issue");
+      newOrder = new sessionOrderSchema({
+        name: currUser.name,
+        email: currUser.email,
+        number: currUser.number,
+        userId: currUser._id,
+        orderItems: cartItems,
+        shippingAddress: {
+          streetAddress: userAddress.streetAddress,
+          city: userAddress.city,
+          state: userAddress.state,
+          country: userAddress.country,
+          pincode: userAddress.pincode,
+        },
+        orderAmount: totalAmountWithShipping,
+        transactionId: session.id,
+        receiptPDF: pdfBuffer,
+      });
+      console.log(newOrder,"i was creating the issue");
       await newOrder.save();
       res.json({ id: session.id });
     } else {
