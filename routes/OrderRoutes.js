@@ -21,7 +21,6 @@ const generateReceiptPDF = (receiptHTML) => {
 
       // Embed the HTML content in the PDF
       pdfDoc.text(receiptHTML);
-
       // Finalize the PDF
       pdfDoc.end();
     } catch (error) {

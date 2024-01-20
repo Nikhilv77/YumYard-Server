@@ -1,23 +1,34 @@
 const express = require('express')
 const router = express.Router();
-const htmlToPdf = require('html-pdf')
+const PDFDocument = require("pdfkit");
 const stripe = require("stripe")(
    `${process.env.STRIPE_API}`
   );
 const Donate = require('../Models/DonateModel')
 const sessionDonationSchema = require('../Models/SessionDonationModal')
 
-const generatePdf = (html)=>{
-  return new Promise((resolve,reject)=>{
-    htmlToPdf.create(html).toBuffer((err,buffer)=>{
-      if(err){
-        reject(err)
-      }else{
-        resolve(buffer)
-      }
-    })
-  })
-}
+const generateReceiptPDF = (htmlReceipt) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const buffers = [];
+      const pdfDoc = new PDFDocument();
+
+      pdfDoc.on("data", (chunk) => buffers.push(chunk));
+      pdfDoc.on("end", () => resolve(Buffer.concat(buffers)));
+      pdfDoc.on("error", (error) => reject(error));
+
+      // Embed the HTML content in the PDF
+      pdfDoc.text(htmlReceipt);
+
+      // Finalize the PDF
+      pdfDoc.end();
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
+
 const donateRoute = router.post('/donate',async(req,res)=>{
 const name = req.body.name;
 const email = req.body.email;
@@ -44,7 +55,7 @@ const session = await stripe.checkout.sessions.create({
 })
 if(session){
   const htmlReceipt = generateHtml({name,email,number},donationAmount);
-  const pdfBuffer = await generatePdf(htmlReceipt);
+  const pdfBuffer = await generateReceiptPDF(htmlReceipt);
 
     const newDonation = new sessionDonationSchema({
         name:name,
