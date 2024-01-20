@@ -3,19 +3,19 @@ const router = express.Router();
 const { v4: uuidv4 } = require("uuid");
 const Order = require("../Models/OrderModel");
 const sessionOrderSchema = require("../Models/SessionOrderModel");
-const puppeteer = require("puppeteer");
+// const puppeteer = require("puppeteer");
 const stripe = require("stripe")(
   `${process.env.STRIPE_API}`
 );
 let newOrder;
-const htmlToPdfBuffer = async (html) => {
-  const browser = await puppeteer.launch({ headless: "new" });
-  const page = await browser.newPage();
-  await page.setContent(html);
-  const pdfBuffer = await page.pdf({ format: "A4" });
-  await browser.close();
-  return pdfBuffer;
-};
+// const htmlToPdfBuffer = async (html) => {
+//   const browser = await puppeteer.launch({ headless: "new" });
+//   const page = await browser.newPage();
+//   await page.setContent(html);
+//   const pdfBuffer = await page.pdf({ format: "A4" });
+//   await browser.close();
+//   return pdfBuffer;
+// };
 
 const placeOrder = router.post("/placeorder", async (req, res) => {
   console.log("logged from placeorder");
@@ -64,7 +64,7 @@ const placeOrder = router.post("/placeorder", async (req, res) => {
       );
       console.log(session,"sessionsssdf");
 
-      const pdfBuffer = await htmlToPdfBuffer(receiptHtml);
+      // const pdfBuffer = await htmlToPdfBuffer(receiptHtml);
 
       newOrder = new sessionOrderSchema({
         name: currUser.name,
@@ -81,10 +81,10 @@ const placeOrder = router.post("/placeorder", async (req, res) => {
         },
         orderAmount: totalAmountWithShipping,
         transactionId: session.id,
-        receiptPDF: pdfBuffer,
+        // receiptPDF: pdfBuffer,
       });
       console.log(newOrder,"i was creating the issue");
-      // await newOrder.save();
+      await newOrder.save();
       res.json({ id: session.id });
     } else {
       res.send("Transaction Failed");
