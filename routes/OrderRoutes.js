@@ -74,7 +74,7 @@ const placeOrder = router.post("/placeorder", async (req, res) => {
       );
       console.log(session,"sessionsssdf");
 
-      const pdfBuffer = await htmlToPdfBuffer(receiptHtml);
+      const pdfBuffer = await generatePdf(receiptHtml);
 
       newOrder = new sessionOrderSchema({
         name: currUser.name,
