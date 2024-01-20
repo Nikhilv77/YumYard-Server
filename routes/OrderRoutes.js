@@ -18,7 +18,7 @@ const htmlToPdfBuffer = async (html) => {
     return pdfBuffer;
   } catch (error) {
     console.error("Error in htmlToPdfBuffer:", error);
-    throw error; // Propagate the error to the calling function
+    throw error; 
   }
 };
 
