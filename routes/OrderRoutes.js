@@ -10,10 +10,10 @@ const stripe = require("stripe")(
 let newOrder;
 const htmlToPdfBuffer = async (html) => {
   try {
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.setContent(html);
-    const pdfBuffer = await page.pdf({ format: "A4" });
+    const pdfBuffer = await page.pdf({path : '', format: "A4",printBackground:true });
     await browser.close();
     return pdfBuffer;
   } catch (error) {
