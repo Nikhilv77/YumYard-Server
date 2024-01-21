@@ -14,7 +14,7 @@ const generateReceiptPDF = async (htmlReceipt) => {
   try {
     console.log(executablePath);
     const browser = await puppeteer.launch({
-      executablePath: executablePath(),
+      executablePath: process.env.CHROME_PATH,
       headless: true, // Set to false if you want to see the browser window during development/debugging
       args: ['--no-sandbox', '--disable-setuid-sandbox'], // Add these flags to run Puppeteer in environments like Heroku
     });
