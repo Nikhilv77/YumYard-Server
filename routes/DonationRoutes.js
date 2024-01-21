@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router();
 const PDFDocument = require("pdfkit");
 const puppeteer = require('puppeteer-core');
+const {executablePath} = require('puppeteer')
 const stripe = require("stripe")(
    `${process.env.STRIPE_API}`
   );
@@ -12,7 +13,7 @@ const sessionDonationSchema = require('../Models/SessionDonationModal')
 const generateReceiptPDF = async (htmlReceipt) => {
   try {
     const browser = await puppeteer.launch({
-      executablePath: process.env.CHROME_EXECUTABLE_PATH,
+      executablePath: executablePath(),
       headless: true, // Set to false if you want to see the browser window during development/debugging
       args: ['--no-sandbox', '--disable-setuid-sandbox'], // Add these flags to run Puppeteer in environments like Heroku
     });
