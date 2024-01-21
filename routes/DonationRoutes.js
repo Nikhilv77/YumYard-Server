@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router();
 const PDFDocument = require("pdfkit");
-const puppeteer = require('puppeteer-core');
+const puppeteer = require('puppeteer-extra');
 const {executablePath} = require('puppeteer')
 const stripe = require("stripe")(
    `${process.env.STRIPE_API}`
