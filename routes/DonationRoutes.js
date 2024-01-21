@@ -12,7 +12,6 @@ const sessionDonationSchema = require('../Models/SessionDonationModal')
 const generateReceiptPDF = async (htmlReceipt) => {
   try {
     const browser = await puppeteer.launch({
-      executablePath: '/path/to/your/chromium', // Provide the path to your Chromium executable
       headless: true, // Set to false if you want to see the browser window during development/debugging
       args: ['--no-sandbox', '--disable-setuid-sandbox'], // Add these flags to run Puppeteer in environments like Heroku
     });
