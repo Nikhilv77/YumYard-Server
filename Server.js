@@ -14,7 +14,7 @@ const feedbackRoutes = require('./routes/FeedbackRoutes')
 const donationRoutes = require('./routes/DonationRoutes')
 const sessionOrderRoutes=require('./routes/SessionOrderRoutes')
 const sessionDonationRoutes = require('./routes/SessionDonationRoutes')
-const news = require('./routes/NewsRoutes')
+
 const cors = require('cors');
 const corsOptions = {
   origin: ['https://yumyard.onrender.com', 'https://yumyard.vercel.app'],
@@ -76,7 +76,7 @@ app.use('/api/donation',donationRoutes.donateRoute)
 app.use('/api/donation',donationRoutes.getAllDonations)
 app.use('/api/session-donations',sessionDonationRoutes.downloadDonationReceipt)
 app.use('/api/session-donations',sessionDonationRoutes.findByIdAndSaveDonation)
-app.use('/api/news',news.getNews)
+
 app.use('/api/session-orders',sessionOrderRoutes.findByIdAndSave)
 app.use('/api/session-orders',sessionOrderRoutes.downloadReceipt)
 const port = process.env.PORT || 8000;
