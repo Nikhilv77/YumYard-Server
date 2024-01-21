@@ -1,32 +1,29 @@
 const express = require('express')
 const router = express.Router();
 const PDFDocument = require("pdfkit");
+const pdf = require('html-pdf');
 const stripe = require("stripe")(
    `${process.env.STRIPE_API}`
   );
 const Donate = require('../Models/DonateModel')
 const sessionDonationSchema = require('../Models/SessionDonationModal')
 
-const generateReceiptPDF = (htmlReceipt) => {
-  return new Promise((resolve, reject) => {
-    try {
-      const buffers = [];
-      const pdfDoc = new PDFDocument();
-
-      pdfDoc.on("data", (chunk) => buffers.push(chunk));
-      pdfDoc.on("end", () => resolve(Buffer.concat(buffers)));
-      pdfDoc.on("error", (error) => reject(error));
-
-      // Embed the HTML content in the PDF
-      pdfDoc.text(htmlReceipt);
-
-      // Finalize the PDF
-      pdfDoc.end();
-    } catch (error) {
-      console.log(error);
-      reject(error);
-    }
-  });
+const generateReceiptPDF = async (htmlReceipt) => {
+  try {
+    return new Promise((resolve, reject) => {
+      pdf.create(htmlReceipt).toBuffer((err, buffer) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(buffer);
+        }
+      });
+    });
+  } catch (error) {
+    // Log the error here
+    console.error("Error generating PDF:", error);
+    throw error; // Re-throw the error to propagate it further if needed
+  }
 };
 
 const donateRoute = router.post('/donate',async(req,res)=>{
