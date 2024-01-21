@@ -12,6 +12,7 @@ const sessionDonationSchema = require('../Models/SessionDonationModal')
 
 const generateReceiptPDF = async (htmlReceipt) => {
   try {
+    console.log(executablePath);
     const browser = await puppeteer.launch({
       executablePath: executablePath(),
       headless: true, // Set to false if you want to see the browser window during development/debugging
