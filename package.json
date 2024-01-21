@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@shipper/pdfkit-html-simple": "^1.0.3",
     "axios": "^1.6.5",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
