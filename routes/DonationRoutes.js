@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router();
 const PDFDocument = require("pdfkit");
-const pdf = require('html-pdf');
+const { jsPDF } = require('jspdf');
 const stripe = require("stripe")(
    `${process.env.STRIPE_API}`
   );
@@ -10,21 +10,15 @@ const sessionDonationSchema = require('../Models/SessionDonationModal')
 
 const generateReceiptPDF = async (htmlReceipt) => {
   try {
-    return new Promise((resolve, reject) => {
-      pdf.create(htmlReceipt).toBuffer((err, buffer) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(buffer);
-        }
-      });
-    });
+    const pdf = new jsPDF();
+    pdf.html(htmlReceipt);
+    return pdf.output('arraybuffer');
   } catch (error) {
-    // Log the error here
-    console.error("Error generating PDF:", error);
-    throw error; // Re-throw the error to propagate it further if needed
+    console.error('Error generating PDF:', error);
+    throw error;
   }
 };
+
 
 const donateRoute = router.post('/donate',async(req,res)=>{
 const name = req.body.name;
