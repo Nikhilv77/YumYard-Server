@@ -1,33 +1,43 @@
 const express = require('express')
 const router = express.Router();
 const PDFDocument = require("pdfkit");
+const puppeteer = require('puppeteer-core');
 const stripe = require("stripe")(
    `${process.env.STRIPE_API}`
   );
 const Donate = require('../Models/DonateModel')
 const sessionDonationSchema = require('../Models/SessionDonationModal')
 
-const generateReceiptPDF = (htmlReceipt) => {
-  return new Promise((resolve, reject) => {
-    try {
-      const buffers = [];
-      const pdfDoc = new PDFDocument();
 
-      pdfDoc.on("data", (chunk) => buffers.push(chunk));
-      pdfDoc.on("end", () => resolve(Buffer.concat(buffers)));
-      pdfDoc.on("error", (error) => reject(error));
+const generateReceiptPDF = async (htmlReceipt) => {
+  try {
+    const browser = await puppeteer.launch({
+      executablePath: '/path/to/your/chromium', // Provide the path to your Chromium executable
+      headless: true, // Set to false if you want to see the browser window during development/debugging
+      args: ['--no-sandbox', '--disable-setuid-sandbox'], // Add these flags to run Puppeteer in environments like Heroku
+    });
 
-      // Embed the HTML content in the PDF
-      pdfDoc.text(htmlReceipt);
+    const page = await browser.newPage();
 
-      // Finalize the PDF
-      pdfDoc.end();
-    } catch (error) {
-      console.log(error);
-      reject(error);
-    }
-  });
+    // Set content to the HTML provided
+    await page.setContent(htmlReceipt);
+
+    // Generate PDF from the HTML content
+    const pdfBuffer = await page.pdf({
+      format: 'A4',
+      printBackground: true,
+    });
+
+    // Close the browser
+    await browser.close();
+
+    return pdfBuffer;
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    throw error;
+  }
 };
+
 
 const donateRoute = router.post('/donate',async(req,res)=>{
 const name = req.body.name;
