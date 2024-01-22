@@ -43,8 +43,8 @@ const generateReceiptPDF = (user, address, cartItems, totalAmount) => {
       pdfDoc.moveDown().fontSize(13);
       pdfDoc.text('Ordered Items:').moveDown();;
       cartItems.forEach((item, index) => {
-        const line = `${index + 1}. ${item.name}         Quantity - ${item.quantity}         Amount - Rs ${item.price * item.quantity}`;
-        pdfDoc.text(line).moveDown();
+        const lineText = `${index + 1}. ${item.name} - Quantity: ${item.quantity} - Amount: Rs ${item.price * item.quantity}`;
+        pdfDoc.text(lineText, { align: 'left' }).moveDown();
         pdfDoc.moveTo(50, pdfDoc.y).lineTo(550, pdfDoc.y).stroke().moveDown();
       });
 
