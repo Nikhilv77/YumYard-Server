@@ -43,13 +43,10 @@ const generateReceiptPDF = (user, address, cartItems, totalAmount) => {
       pdfDoc.moveDown().fontSize(13);
       pdfDoc.text('Ordered Items:');
       cartItems.forEach((item, index) => {
-        const margin = 15; // Adjust the margin value as needed
-
-        pdfDoc.text(`${index + 1}. ${item.name}`, { continued: true })
-              .move(margin)
-              .text(`(${item.quantity})- Rs ${item.price * item.quantity}`);
-        
-
+        pdfDoc.text(`${index + 1}. ${item.name}`,{align :'left'});
+        pdfDoc.text(`Quantity - ${item.quantity}`,{ align: 'center' })
+        pdfDoc.text(`Amount - Rs ${item.price*item.quantity}`,{align:'right'})
+        pdfDoc.moveTo(50, pdfDoc.y).lineTo(550, pdfDoc.y).stroke().moveDown();
       });
 
       // Total Amount
