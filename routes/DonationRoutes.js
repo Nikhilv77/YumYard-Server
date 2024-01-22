@@ -7,7 +7,7 @@ const stripe = require("stripe")(
 const Donate = require('../Models/DonateModel')
 const sessionDonationSchema = require('../Models/SessionDonationModal')
 
-const generateReceiptPDF = (name,email,number,donationAmount) => {
+const generateReceiptPDF = (name, email, number, donationAmount) => {
   return new Promise((resolve, reject) => {
     try {
       const buffers = [];
@@ -25,15 +25,27 @@ const generateReceiptPDF = (name,email,number,donationAmount) => {
         .text('Thank you for your generous contribution!', { align: 'center' })
         .moveDown();
 
+      // Add recipient information
+      pdfDoc
+        .fontSize(12)
+        .text('Donated To:', { align: 'center' })
+        .text('Yumyard Pvt Ltd', { align: 'center' })
+        .moveDown();
+
       // Add donation information
       pdfDoc
-        .fontSize(14)
-        .text(`Date: ${ new Date().toLocaleTimeString()}`)
+        .fontSize(12)
+        .text(`Date: ${new Date().toLocaleDateString()}`)
         .text(`Time: ${new Date().toLocaleTimeString()}`)
-        .text(`Donor name: ${name}`)
+        .moveDown();
+
+      // Add donor details
+      pdfDoc
+        .fontSize(12)
+        .text(`Donor Name: ${name}`)
         .text(`Donor Email: ${email}`)
-        .text(`Donor phone :${number}`)
-        .text(`Amount: Rs${donationAmount}`)
+        .text(`Donor Phone: ${number}`)
+        .text(`Donation Amount: Rs${donationAmount}`)
         .moveDown();
 
       // Add a line for separation
@@ -43,6 +55,13 @@ const generateReceiptPDF = (name,email,number,donationAmount) => {
       pdfDoc
         .fontSize(12)
         .text('Your contribution is greatly appreciated!', { align: 'center' })
+        .moveDown();
+
+      // Add footer with contact information (customize as needed)
+      pdfDoc
+        .fontSize(10)
+        .text('For inquiries, please contact Yumyard Pvt Ltd:')
+        .text('Email: info@yumyard.com | Phone: +1 123-456-7890', { align: 'center' })
         .moveDown();
 
       // Finalize the PDF
@@ -106,3 +125,4 @@ const getAllDonations = router.get('/getalldonations', async (req,res)=>{
     }
   })
 module.exports = {donateRoute,getAllDonations}
+
