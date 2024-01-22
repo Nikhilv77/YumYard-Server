@@ -11,6 +11,8 @@ const generateReceiptPDF = (name, email, number, donationAmount) => {
   return new Promise((resolve, reject) => {
     try {
       const buffers = [];
+      const currentDate = new Date().toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata' });
+      const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Kolkata' });
       const pdfDoc = new PDFDocument();
 
       pdfDoc.on("data", (chunk) => buffers.push(chunk));
@@ -35,8 +37,8 @@ const generateReceiptPDF = (name, email, number, donationAmount) => {
       // Add donation information
       pdfDoc
         .fontSize(12)
-        .text(`Date: ${new Date().toLocaleDateString()}`)
-        .text(`Time: ${new Date().toLocaleTimeString()}`)
+        .text(`Date: ${currentDate}`)
+        .text(`Time: ${currentTime}`)
         .moveDown();
 
       // Add donor details
