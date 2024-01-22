@@ -43,13 +43,13 @@ const generateReceiptPDF = (user, address, cartItems, totalAmount) => {
       pdfDoc.moveDown().fontSize(13);
       pdfDoc.text('Ordered Items:');
       cartItems.forEach((item, index) => {
-        pdfDoc.text(`${index + 1}. ${item.name} - \u20B9${item.price}, Quantity - ${item.quantity}, Total - \u20B9${item.quantity * item.price}`, { indent: 20 });
+        pdfDoc.text(`${index + 1}. ${item.name}${(item.quantity)} - &#8377;${item.price*item.quantity}`);
 
       });
 
       // Total Amount
       pdfDoc.moveDown().fontSize(14);
-      pdfDoc.text(`Total Amount: ₹${totalAmount}`, { align: 'right' });
+      pdfDoc.text(`Total Amount: &#8377;${totalAmount}`, { align: 'right' });
 
       // Thank You Message
       pdfDoc.moveDown().fontSize(12).text('Thank you for choosing Yumyard!', { align: 'center' });

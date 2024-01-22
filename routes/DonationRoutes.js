@@ -47,7 +47,7 @@ const generateReceiptPDF = (name, email, number, donationAmount) => {
         .text(`Donor Name - ${name}`)
         .text(`Donor Email - ${email}`)
         .text(`Donor Phone - ${number}`)
-        .text(`Donation Amount - \u20B9${donationAmount}`)
+        .text(`Donation Amount - &#8377;${donationAmount}`)
         .moveDown();
 
       // Add a line for separation
