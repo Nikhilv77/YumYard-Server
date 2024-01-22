@@ -22,9 +22,9 @@ const name = req.body.name;
 const email = req.body.email;
 const number = req.body.number;
 const donationAmount = req.body.donationAmount;
-const pdfBuffer = req.body.pdfBuffer;
+const pdfFile = req.body.pdfBuffer;
 console.log(name,email,number,donationAmount);
-console.log(pdfBuffer,"buffer");
+
 
 const lineItems  =[{price_data:{
     currency:'inr',
@@ -46,7 +46,7 @@ const session = await stripe.checkout.sessions.create({
 if(session){
   // const htmlReceipt = generateHtml({name,email,number},donationAmount);
   // const pdfBuffer = await generateReceiptPDF(htmlReceipt);
-
+  const pdfBuffer = Buffer.from(pdfFile, 'base64'); 
     const newDonation = new sessionDonationSchema({
         name:name,
         email:email,
