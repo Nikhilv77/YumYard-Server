@@ -24,7 +24,6 @@ const number = req.body.number;
 const donationAmount = req.body.donationAmount;
 const pdfBuffer = req.body.pdfBuffer;
 console.log(name,email,number,donationAmount);
-console.log(pdfBuffer,"pdfbuffer");
 
 const lineItems  =[{price_data:{
     currency:'inr',
