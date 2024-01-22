@@ -1,21 +1,20 @@
 const express = require('express')
 const router = express.Router();
-import htmlToPdf from '@webmogilevtsev/html-to-pdf';
 const stripe = require("stripe")(
    `${process.env.STRIPE_API}`
   );
 const Donate = require('../Models/DonateModel')
 const sessionDonationSchema = require('../Models/SessionDonationModal')
 
-const generateReceiptPDF = async (htmlReceipt) => {
-  try {
-  const pdfBuffer = await htmlToPdf(htmlReceipt);
-  return pdfBuffer;
-  } catch (error) {
-    console.error('Error generating PDF:', error);
-    throw error; 
-  }
-};
+// const generateReceiptPDF = async (htmlReceipt) => {
+//   try {
+//   const pdfBuffer = await htmlToPdf(htmlReceipt);
+//   return pdfBuffer;
+//   } catch (error) {
+//     console.error('Error generating PDF:', error);
+//     throw error; 
+//   }
+// };
 
 
 const donateRoute = router.post('/donate',async(req,res)=>{
@@ -142,7 +141,7 @@ const generateHtml = (user,donationAmount)=>{
     </div>
   </body>
   </html>
-`;
+`
 
 return receiptHTML;
 }
