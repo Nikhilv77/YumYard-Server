@@ -1,27 +1,34 @@
 const express = require('express')
 const router = express.Router();
-const PuppeteerHTMLPDF = require('puppeteer-html-pdf');
+const puppeteer = require('puppeteer');
 const stripe = require("stripe")(
    `${process.env.STRIPE_API}`
   );
 const Donate = require('../Models/DonateModel')
 const sessionDonationSchema = require('../Models/SessionDonationModal')
 
-const generateReceiptPDF = async(htmlReceipt) => {
+const generateReceiptPDF = async (htmlReceipt) => {
+  try {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
 
-const htmlPDF = new PuppeteerHTMLPDF();
-const options = { 
-  format: 'A4' 
-}
-htmlPDF.setOptions(options);
-  
-try {
-  const pdfBuffer = await htmlPDF.create(htmlReceipt); 
-  return pdfBuffer;
-} catch (error) {
-  console.log('PuppeteerHTMLPDF error', error);
-}
+    // Set the content of the page to the generated HTML
+    await page.setContent(htmlReceipt);
+
+    // Generate PDF from the HTML content
+    const pdfBuffer = await page.pdf();
+
+    // Close the browser
+    await browser.close();
+
+    return pdfBuffer;
+  } catch (error) {
+    // Handle the error here
+    console.error('Error generating PDF:', error);
+    throw error; // Re-throw the error to propagate it up the call stack
+  }
 };
+
 
 const donateRoute = router.post('/donate',async(req,res)=>{
 const name = req.body.name;
