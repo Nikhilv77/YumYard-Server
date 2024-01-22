@@ -45,7 +45,7 @@ const generateReceiptPDF = (name, email, number, donationAmount) => {
         .text(`Donor Name: ${name}`)
         .text(`Donor Email: ${email}`)
         .text(`Donor Phone: ${number}`)
-        .text(`Donation Amount: Rs${donationAmount}`)
+        .text(`Donation Amount: Rs ${donationAmount}`)
         .moveDown();
 
       // Add a line for separation
@@ -60,7 +60,7 @@ const generateReceiptPDF = (name, email, number, donationAmount) => {
       // Add footer with contact information (customize as needed)
       pdfDoc
         .fontSize(10)
-        .text('For inquiries, please contact Yumyard Pvt Ltd:')
+        .text('For inquiries, please contact Yumyard Pvt Ltd:',{ align: 'center'})
         .text('Email: info@yumyard.com | Phone: +1 123-456-7890', { align: 'center' })
         .moveDown();
 
