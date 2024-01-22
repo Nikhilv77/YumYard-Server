@@ -15,8 +15,6 @@ const generateReceiptPDF = (user, address, cartItems, totalAmount) => {
       const buffers = [];
       const pdfDoc = new PDFDocument();
 
-      pdfDoc.pipe(fs.createWriteStream('receipt.pdf'));
-
       pdfDoc.on("data", (chunk) => buffers.push(chunk));
       pdfDoc.on("end", () => resolve(Buffer.concat(buffers)));
       pdfDoc.on("error", (error) => reject(error));
@@ -31,30 +29,35 @@ const generateReceiptPDF = (user, address, cartItems, totalAmount) => {
       pdfDoc.moveDown().fontSize(12).text(`Date: ${currentDate} Time: ${currentTime}`, { align: 'right' });
 
       // User Information
-      pdfDoc.moveDown().fontSize(14);
+      pdfDoc.moveDown().fontSize(13);
       pdfDoc.text(`Customer Name: ${user.name}`);
       pdfDoc.text(`Email: ${user.email}`);
       pdfDoc.text(`Phone Number: ${user.number}`);
 
       // Address
-      pdfDoc.moveDown().fontSize(14);
+      pdfDoc.moveDown().fontSize(13);
       pdfDoc.text('Shipping Address:');
       pdfDoc.text(address);
 
       // Cart Items
-      pdfDoc.moveDown().fontSize(14);
+      pdfDoc.moveDown().fontSize(13);
       pdfDoc.text('Ordered Items:');
       cartItems.forEach((item, index) => {
         pdfDoc.text(`${index + 1}. ${item.name} - $${item.price}`);
       });
 
       // Total Amount
-      pdfDoc.moveDown().fontSize(16);
+      pdfDoc.moveDown().fontSize(14);
       pdfDoc.text(`Total Amount: $${totalAmount}`, { align: 'right' });
 
       // Thank You Message
-      pdfDoc.moveDown().fontSize(14).text('Thank you for choosing Yumyard!', { align: 'center' });
-
+      pdfDoc.moveDown().fontSize(12).text('Thank you for choosing Yumyard!', { align: 'center' });
+      //footer
+      pdfDoc
+      .fontSize(10)
+      .text('For inquiries, please contact Yumyard Pvt Ltd:',{ align: 'center'})
+      .text('Email: info@yumyard.com | Phone: +1 123-456-7890', { align: 'center' })
+      .moveDown();
       // Finalize the PDF
       pdfDoc.end();
     } catch (error) {
