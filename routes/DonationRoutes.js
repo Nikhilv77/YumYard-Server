@@ -1,30 +1,40 @@
 const express = require('express')
 const router = express.Router();
+const PDFDocument = require("pdfkit");
 const stripe = require("stripe")(
    `${process.env.STRIPE_API}`
   );
 const Donate = require('../Models/DonateModel')
 const sessionDonationSchema = require('../Models/SessionDonationModal')
 
-// const generateReceiptPDF = async (htmlReceipt) => {
-//   try {
-//   const pdfBuffer = await htmlToPdf(htmlReceipt);
-//   return pdfBuffer;
-//   } catch (error) {
-//     console.error('Error generating PDF:', error);
-//     throw error; 
-//   }
-// };
+const generateReceiptPDF = (htmlReceipt) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const buffers = [];
+      const pdfDoc = new PDFDocument();
 
+      pdfDoc.on("data", (chunk) => buffers.push(chunk));
+      pdfDoc.on("end", () => resolve(Buffer.concat(buffers)));
+      pdfDoc.on("error", (error) => reject(error));
+
+      // Embed the HTML content in the PDF
+      pdfDoc.text(htmlReceipt);
+
+      // Finalize the PDF
+      pdfDoc.end();
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
 
 const donateRoute = router.post('/donate',async(req,res)=>{
 const name = req.body.name;
 const email = req.body.email;
 const number = req.body.number;
 const donationAmount = req.body.donationAmount;
-const pdfFile = req.body.pdfBuffer;
 console.log(name,email,number,donationAmount);
-
 
 const lineItems  =[{price_data:{
     currency:'inr',
@@ -44,9 +54,9 @@ const session = await stripe.checkout.sessions.create({
 
 })
 if(session){
-  // const htmlReceipt = generateHtml({name,email,number},donationAmount);
-  // const pdfBuffer = await generateReceiptPDF(htmlReceipt);
-  const pdfBuffer = Buffer.from(pdfFile, 'base64'); 
+  const htmlReceipt = generateHtml({name,email,number},donationAmount);
+  const pdfBuffer = await generateReceiptPDF(htmlReceipt);
+
     const newDonation = new sessionDonationSchema({
         name:name,
         email:email,
@@ -142,7 +152,7 @@ const generateHtml = (user,donationAmount)=>{
     </div>
   </body>
   </html>
-`
+`;
 
 return receiptHTML;
 }
