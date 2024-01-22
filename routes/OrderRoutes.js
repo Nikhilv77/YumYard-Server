@@ -43,7 +43,8 @@ const generateReceiptPDF = (user, address, cartItems, totalAmount) => {
       pdfDoc.moveDown().fontSize(13);
       pdfDoc.text('Ordered Items:');
       cartItems.forEach((item, index) => {
-        pdfDoc.text(`${index + 1}. ${item.name} - ₹${item.price}, Quantity: ${item.quantity}, Total: ₹${item.quantity * item.price}`);
+        pdfDoc.text(`${index + 1}. ${item.name} - \u20B9${item.price}, Quantity - ${item.quantity}, Total - \u20B9${item.quantity * item.price}`, { indent: 20 });
+
       });
 
       // Total Amount

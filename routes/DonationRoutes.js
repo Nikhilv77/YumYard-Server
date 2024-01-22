@@ -30,24 +30,24 @@ const generateReceiptPDF = (name, email, number, donationAmount) => {
       // Add recipient information
       pdfDoc
         .fontSize(12)
-        .text('Donated To:', { align: 'center' })
+        .text('Donated To -', { align: 'center' })
         .text('Yumyard Pvt Ltd', { align: 'center' })
         .moveDown();
 
       // Add donation information
       pdfDoc
         .fontSize(12)
-        .text(`Date: ${currentDate}`)
-        .text(`Time: ${currentTime}`)
+        .text(`Date - ${currentDate}`)
+        .text(`Time - ${currentTime}`)
         .moveDown();
 
       // Add donor details
       pdfDoc
         .fontSize(12)
-        .text(`Donor Name: ${name}`)
-        .text(`Donor Email: ${email}`)
-        .text(`Donor Phone: ${number}`)
-        .text(`Donation Amount: ₹${donationAmount}`)
+        .text(`Donor Name - ${name}`)
+        .text(`Donor Email - ${email}`)
+        .text(`Donor Phone - ${number}`)
+        .text(`Donation Amount - \u20B9${donationAmount}`)
         .moveDown();
 
       // Add a line for separation
