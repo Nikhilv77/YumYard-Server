@@ -21,7 +21,7 @@ const corsOptions = {
   credentials: true,
 };
 const cookieParser = require('cookie-parser');
-app.use(express.json());
+app.use(express.json({ limit: '20mb' }));
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.get("/", (req, res) => {
