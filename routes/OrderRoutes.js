@@ -9,18 +9,52 @@ const stripe = require("stripe")(
 );
 let newOrder;
 
-const generateReceiptPDF = (receiptHTML) => {
+const generateReceiptPDF = (user, address, cartItems, totalAmount) => {
   return new Promise((resolve, reject) => {
     try {
       const buffers = [];
       const pdfDoc = new PDFDocument();
 
+      pdfDoc.pipe(fs.createWriteStream('receipt.pdf'));
+
       pdfDoc.on("data", (chunk) => buffers.push(chunk));
       pdfDoc.on("end", () => resolve(Buffer.concat(buffers)));
       pdfDoc.on("error", (error) => reject(error));
 
-      // Embed the HTML content in the PDF
-      pdfDoc.text(receiptHTML);
+      // Header
+      pdfDoc.fontSize(24).text('Yumyard Pvt Ltd', { align: 'center' });
+      pdfDoc.moveDown().fontSize(18).text('Order Receipt', { align: 'center' });
+
+      // Current Date and Time
+      const currentDate = new Date().toLocaleDateString();
+      const currentTime = new Date().toLocaleTimeString();
+      pdfDoc.moveDown().fontSize(12).text(`Date: ${currentDate} Time: ${currentTime}`, { align: 'right' });
+
+      // User Information
+      pdfDoc.moveDown().fontSize(14);
+      pdfDoc.text(`Customer Name: ${user.name}`);
+      pdfDoc.text(`Email: ${user.email}`);
+      pdfDoc.text(`Phone Number: ${user.number}`);
+
+      // Address
+      pdfDoc.moveDown().fontSize(14);
+      pdfDoc.text('Shipping Address:');
+      pdfDoc.text(address);
+
+      // Cart Items
+      pdfDoc.moveDown().fontSize(14);
+      pdfDoc.text('Ordered Items:');
+      cartItems.forEach((item, index) => {
+        pdfDoc.text(`${index + 1}. ${item.name} - $${item.price}`);
+      });
+
+      // Total Amount
+      pdfDoc.moveDown().fontSize(16);
+      pdfDoc.text(`Total Amount: $${totalAmount}`, { align: 'right' });
+
+      // Thank You Message
+      pdfDoc.moveDown().fontSize(14).text('Thank you for choosing Yumyard!', { align: 'center' });
+
       // Finalize the PDF
       pdfDoc.end();
     } catch (error) {
@@ -29,6 +63,7 @@ const generateReceiptPDF = (receiptHTML) => {
     }
   });
 };
+
 
 
 const placeOrder = router.post("/placeorder", async (req, res) => {
@@ -70,15 +105,12 @@ const placeOrder = router.post("/placeorder", async (req, res) => {
     });
 
     if (session) {
-      const receiptHtml = generateReceipt(
-        currUser,
-        userAddress,
-        cartItems,
-        totalAmountWithShipping
-      );
       console.log(session,"sessionsssdf");
-
-      const pdfBuffer = await generateReceiptPDF(receiptHtml);
+      const address = `${userAddress.streetAddress}, ${userAddress.pincode}, ${userAddress.city}, ${userAddress.state}`;
+      const pdfBuffer = await generateReceiptPDF(currUser,
+        address,
+        cartItems,
+        totalAmountWithShipping);
 
       newOrder = new sessionOrderSchema({
         name: currUser.name,
