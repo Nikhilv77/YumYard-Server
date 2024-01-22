@@ -7,7 +7,7 @@ const stripe = require("stripe")(
 const Donate = require('../Models/DonateModel')
 const sessionDonationSchema = require('../Models/SessionDonationModal')
 
-const generateReceiptPDF = (htmlReceipt) => {
+const generateReceiptPDF = (name,email,number,donationAmount) => {
   return new Promise((resolve, reject) => {
     try {
       const buffers = [];
@@ -17,8 +17,33 @@ const generateReceiptPDF = (htmlReceipt) => {
       pdfDoc.on("end", () => resolve(Buffer.concat(buffers)));
       pdfDoc.on("error", (error) => reject(error));
 
-      // Embed the HTML content in the PDF
-      pdfDoc.text(htmlReceipt);
+      // Add donation receipt header
+      pdfDoc
+        .fontSize(18)
+        .text('Donation Receipt', { align: 'center' })
+        .fontSize(12)
+        .text('Thank you for your generous contribution!', { align: 'center' })
+        .moveDown();
+
+      // Add donation information
+      pdfDoc
+        .fontSize(14)
+        .text(`Date: ${ new Date().toLocaleTimeString()}`)
+        .text(`Time: ${new Date().toLocaleTimeString()}`)
+        .text(`Donor name: ${name}`)
+        .text(`Donor Email: ${email}`)
+        .text(`Donor phone :${number}`)
+        .text(`Amount: Rs${donationAmount}`)
+        .moveDown();
+
+      // Add a line for separation
+      pdfDoc.moveTo(50, pdfDoc.y).lineTo(550, pdfDoc.y).stroke().moveDown();
+
+      // Add a thank you message
+      pdfDoc
+        .fontSize(12)
+        .text('Your contribution is greatly appreciated!', { align: 'center' })
+        .moveDown();
 
       // Finalize the PDF
       pdfDoc.end();
@@ -54,8 +79,8 @@ const session = await stripe.checkout.sessions.create({
 
 })
 if(session){
-  const htmlReceipt = generateHtml({name,email,number},donationAmount);
-  const pdfBuffer = await generateReceiptPDF(htmlReceipt);
+ 
+  const pdfBuffer = await generateReceiptPDF(name,email,number,donationAmount);
 
     const newDonation = new sessionDonationSchema({
         name:name,
@@ -81,78 +106,3 @@ const getAllDonations = router.get('/getalldonations', async (req,res)=>{
     }
   })
 module.exports = {donateRoute,getAllDonations}
-
-const generateHtml = (user,donationAmount)=>{
-  const currentDate = new Date().toLocaleDateString();
-  const currentTime = new Date().toLocaleTimeString();
-  const receiptHTML = `
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-      body {
-        font-family: 'Times Roman';
-        font-size:1.2rem;
-        margin: 20px;
-        padding: 20px;
-        max-width: 800px; 
-        margin: 0 auto;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      }
-      h1{
-        text-align:center;
-        color:black;
-        font-size:1.7rem;
-      }
-      h2, h3 {
-        text-align: center;
-        color: black;
-        font-size:1.5rem;
-      }
-      .user-info {
-        margin-top: 20px;
-      }
-      .branding {
-        text-align: center;
-        font-size:1.2rem;
-        margin-top: 50px; /* Adjust the margin as needed */
-        font-style: italic;
-        color: #888; /* Choose a color that fits your design */
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Donation Receipt</h1>
-
-    <div class="user-info">
-      <h3>Donated by</h3>
-      <p><strong>Name:</strong> ${user.name}</p>
-      <p><strong>Email:</strong> ${user.email}</p>
-      <p><strong>Phone no.:</strong> ${user.number}</p>
-    </div>
-
-    <div class="user-info">
-      <h3>Donated to</h3>
-      <p><strong>YumYard Pvt Ltd</strong></p>
-      <p><strong>Email:</strong> Donation@yumyard.com</p>
-      <p><strong>Phone no.:</strong> 7208291301</p>
-      <p><strong>Address:</strong> Mumbai, India</p>
-    </div>
-
-    <h3>Donation Details</h3>
-    <p><strong>Donation Amount:</strong> ${donationAmount} INR</p>
-    <p><strong>Date:</strong> ${currentDate}</p>
-    <p><strong>Time:</strong> ${currentTime}</p>
-
-    <div class="branding">
-      <p>Thank you for supporting YumYard's initiative!</p>
-    </div>
-  </body>
-  </html>
-`;
-
-return receiptHTML;
-}
