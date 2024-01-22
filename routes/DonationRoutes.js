@@ -1,32 +1,26 @@
 const express = require('express')
 const router = express.Router();
-const PDFDocument = require("pdfkit");
+const PuppeteerHTMLPDF = require('puppeteer-html-pdf');
 const stripe = require("stripe")(
    `${process.env.STRIPE_API}`
   );
 const Donate = require('../Models/DonateModel')
 const sessionDonationSchema = require('../Models/SessionDonationModal')
 
-const generateReceiptPDF = (htmlReceipt) => {
-  return new Promise((resolve, reject) => {
-    try {
-      const buffers = [];
-      const pdfDoc = new PDFDocument();
+const generateReceiptPDF = async(htmlReceipt) => {
 
-      pdfDoc.on("data", (chunk) => buffers.push(chunk));
-      pdfDoc.on("end", () => resolve(Buffer.concat(buffers)));
-      pdfDoc.on("error", (error) => reject(error));
-
-      // Embed the HTML content in the PDF
-      pdfDoc.text(htmlReceipt);
-
-      // Finalize the PDF
-      pdfDoc.end();
-    } catch (error) {
-      console.log(error);
-      reject(error);
-    }
-  });
+const htmlPDF = new PuppeteerHTMLPDF();
+const options = { 
+  format: 'A4' 
+}
+htmlPDF.setOptions(options);
+  
+try {
+  const pdfBuffer = await htmlPDF.create(htmlReceipt); 
+  return pdfBuffer;
+} catch (error) {
+  console.log('PuppeteerHTMLPDF error', error);
+}
 };
 
 const donateRoute = router.post('/donate',async(req,res)=>{
