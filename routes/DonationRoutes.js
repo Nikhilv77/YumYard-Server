@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router();
-const puppeteer = require('puppeteer');
+import htmlToPdf from '@webmogilevtsev/html-to-pdf';
 const stripe = require("stripe")(
    `${process.env.STRIPE_API}`
   );
@@ -9,23 +9,11 @@ const sessionDonationSchema = require('../Models/SessionDonationModal')
 
 const generateReceiptPDF = async (htmlReceipt) => {
   try {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-
-    // Set the content of the page to the generated HTML
-    await page.setContent(htmlReceipt);
-
-    // Generate PDF from the HTML content
-    const pdfBuffer = await page.pdf();
-
-    // Close the browser
-    await browser.close();
-
-    return pdfBuffer;
+  const pdfBuffer = await htmlToPdf(htmlReceipt);
+  return pdfBuffer;
   } catch (error) {
-    // Handle the error here
     console.error('Error generating PDF:', error);
-    throw error; // Re-throw the error to propagate it up the call stack
+    throw error; 
   }
 };
 
