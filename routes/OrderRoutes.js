@@ -26,7 +26,7 @@ const generateReceiptPDF = (user, address, cartItems, totalAmount) => {
       // Current Date and Time
       const currentDate = new Date().toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata' });
       const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Kolkata' });
-      pdfDoc.moveDown().fontSize(12).text(`Date: ${currentDate} Time: ${currentTime}`, { align: 'right' });
+      pdfDoc.moveDown().fontSize(12).text(`Date: ${currentDate}, Time: ${currentTime}`, { align: 'right' });
 
       // User Information
       pdfDoc.moveDown().fontSize(13);
@@ -43,12 +43,12 @@ const generateReceiptPDF = (user, address, cartItems, totalAmount) => {
       pdfDoc.moveDown().fontSize(13);
       pdfDoc.text('Ordered Items:');
       cartItems.forEach((item, index) => {
-        pdfDoc.text(`${index + 1}. ${item.name} - $${item.price}`);
+        pdfDoc.text(`${index + 1}. ${item.name} - ₹${item.price}, Quantity: ${item.quantity}, Total: ₹${item.quantity * item.price}`);
       });
 
       // Total Amount
       pdfDoc.moveDown().fontSize(14);
-      pdfDoc.text(`Total Amount: $${totalAmount}`, { align: 'right' });
+      pdfDoc.text(`Total Amount: ₹${totalAmount}`, { align: 'right' });
 
       // Thank You Message
       pdfDoc.moveDown().fontSize(12).text('Thank you for choosing Yumyard!', { align: 'center' });
