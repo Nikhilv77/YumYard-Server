@@ -42,12 +42,33 @@ const generateReceiptPDF = (user, address, cartItems, totalAmount) => {
       // Cart Items
       pdfDoc.moveDown().fontSize(13);
       pdfDoc.text('Ordered Items:').moveDown();;
+      const maxLineWidth = 550;  // Maximum width for the text
+
       cartItems.forEach((item, index) => {
-        pdfDoc.text(`${index + 1}. ${item.name}`,{align:'left'})
-        pdfDoc.text(`Quantity - ${item.quantity}`,{align:'center'})
-        pdfDoc.text(`Amount - Rs ${item.price * item.quantity}`,{align:'right'})
-        pdfDoc.moveTo(50, pdfDoc.y).lineTo(550, pdfDoc.y).stroke().moveDown();
-      });
+          const itemText = `${index + 1}. ${item.name}`;
+          const quantityText = `Quantity - ${item.quantity}`;
+          const amountText = `Amount - Rs ${item.price * item.quantity}`;
+      
+          const itemWidth = pdfDoc.widthOfString(itemText);
+          const quantityWidth = pdfDoc.widthOfString(quantityText);
+          
+          // Calculate the x-coordinate for the item name
+          const itemX = 50;
+      
+          // Calculate the x-coordinate for the quantity text
+          const quantityX = (maxLineWidth - quantityWidth) / 2;
+      
+          // Calculate the x-coordinate for the amount text
+          const amountX = maxLineWidth - pdfDoc.widthOfString(amountText);
+      
+          // Display the text with adjusted x-coordinates
+          pdfDoc.text(itemText, itemX, pdfDoc.y);
+          pdfDoc.text(quantityText, quantityX, pdfDoc.y);
+          pdfDoc.text(amountText, amountX, pdfDoc.y);
+      
+          // Move down for the next line
+          pdfDoc.moveDown();
+      })
 
       // Total Amount
       pdfDoc.moveDown().fontSize(14);
