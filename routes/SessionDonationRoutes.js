@@ -5,7 +5,7 @@ const router = express.Router();
 
 const findByIdAndSaveDonation = router.post('/findByIdAndSaveDonation',async(req,res)=>{
 const id = req.body.transactionId;
-console.log(id);
+
 
 try {
     const donation = await sessionDonationSchema.findOne({transactionId:id});
@@ -17,7 +17,6 @@ try {
       donationAmount: donation.donationAmount,
       transactionId: donation.transactionId,
     })
-    console.log(newDonation,"coming from session");
     await newDonation.save();
     res.send('Donation saved Successfully')
 } catch (error) {

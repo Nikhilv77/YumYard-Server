@@ -72,10 +72,9 @@ const generateReceiptPDF = (user, address, cartItems, totalAmount) => {
 
 
 const placeOrder = router.post("/placeorder", async (req, res) => {
-  console.log("logged from placeorder");
-  console.log(`${process.env.STRIPE_API}`)
+
   const { currUser, cartItems, totalPrice, userAddress } = req.body;
-  console.log(totalPrice);
+
 
   const totalAmountWithShipping = totalPrice + 20;
   const lineItems = cartItems.map((cartItem) => ({
@@ -94,9 +93,9 @@ const placeOrder = router.post("/placeorder", async (req, res) => {
       product_data: {
         name: "Shipping Charge",
       },
-      unit_amount: 20 * 100, // Amount in cents
+      unit_amount: 20 * 100, 
     },
-    quantity: 1, // Assuming a fixed shipping charge
+    quantity: 1, 
   });
   try {
     const session = await stripe.checkout.sessions.create({
@@ -110,7 +109,6 @@ const placeOrder = router.post("/placeorder", async (req, res) => {
     });
 
     if (session) {
-      console.log(session,"sessionsssdf");
       const address = `${userAddress.streetAddress}, ${userAddress.pincode}, ${userAddress.city}, ${userAddress.state}`;
       const pdfBuffer = await generateReceiptPDF(currUser,
         address,
@@ -134,7 +132,6 @@ const placeOrder = router.post("/placeorder", async (req, res) => {
         transactionId: session.id,
         receiptPDF: pdfBuffer,
       });
-      console.log(newOrder,"i was creating the issue");
       await newOrder.save();
       res.json({ id: session.id });
     } else {
@@ -201,118 +198,4 @@ module.exports = {
   getAllUserOrders,
   delivery,
   cancelOrder,
-};
-const generateReceipt = (user, userAddress, cartItems, totalAmount) => {
-  const address = `${userAddress.streetAddress}, ${userAddress.pincode}, ${userAddress.city}, ${userAddress.state}`;
-  const currentDate = new Date().toLocaleString();
-  const formattedItems = cartItems
-    .map(
-      (item) => `
-    <tr>
-      <td>${item.name}</td>
-      <td>${item.quantity}</td>
-      <td>${item.price} INR</td>
-      <td>${item.quantity * item.price} INR</td>
-    </tr>
-  `
-    )
-    .join("");
-
-  const receiptHTML = `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <style>
-        body {
-          font-family: 'Times Roman';
-          margin: 20px;
-          padding: 20px;
-          max-width: 800px; 
-          margin: 0 auto;
-          font-size: 1.2rem;
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h2{
-          font-size: 1.6rem;
-          text-align: center;
-          color: #333;
-        }
-        h3 {
-          font-size: 1.4rem;
-          text-align: center;
-          color: #333;
-        }
-        table {
-          width: 100%;
-          margin-top: 20px;
-          border-collapse: collapse;
-          font-size: 1.2rem;
-        }
-        th, td {
-          padding: 15px;
-          border-bottom: 1px solid #ddd;
-          text-align: left;
-        }
-        th {
-          background-color: #f2f2f2;
-        }
-        tfoot {
-          font-weight: bold;
-        }
-        .user-info {
-          margin-top: 20px;
-        }
-        .branding {
-          text-align: center;
-          margin-top: 50px; /* Adjust the margin as needed */
-          font-style: italic;
-          font-size: 1.2rem;
-          color: #888; /* Choose a color that fits your design */
-        }
-      </style>
-    </head>
-    <body>
-      <h2>Order Receipt</h2>
-
-      <div class="user-info">
-       
-        <h3>Customer Information</h3>
-        <p><strong>Name:</strong> ${user.name}</p>
-        <p><strong>Email:</strong> ${user.email}</p>
-        <p><strong>Phone no.:</strong> ${user.number}</p>
-        <p><strong>Address:</strong> ${address}</p>
-        <p><strong>Ordered At:</strong> ${currentDate}</p>
-      </div>
-      <h3>Items</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Item</th>
-            <th>Quantity</th>
-            <th>Price per Unit</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${formattedItems}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="3">Total Amount</td>
-            <td>${totalAmount} INR</td>
-          </tr>
-        </tfoot>
-      </table>
-      
-    <div class="branding">
-    <p>Thank you for choosing YumYard!</p>
-  </div>
-    </body>
-    </html>
-  `;
-
-  return receiptHTML;
 };

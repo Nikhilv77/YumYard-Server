@@ -12,7 +12,7 @@ try {
 
 const deleteSide = router.post('/deleteside',async(req,res)=>{
     const productId = req.body.productId;
-    console.log(productId);
+
     try{
       await SidesModel.findOneAndDelete({_id:productId})
       res.send('Side deleted SuccessFully!')
@@ -23,7 +23,7 @@ const deleteSide = router.post('/deleteside',async(req,res)=>{
   
   const getSideById = router.post('/getbyid',async(req,res)=>{
     const productId = req.body.productId;
-    console.log(productId);
+  
     try{
       const product = await SidesModel.findOne({_id:productId})
       res.send(product)

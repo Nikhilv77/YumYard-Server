@@ -43,7 +43,7 @@ const deleteProduct = router.post('/deleteproduct',async(req,res)=>{
 
 const getById = router.post('/getbyid',async(req,res)=>{
   const productId = req.body.productId;
-  console.log(productId);
+
   try{
     const product = await pizzaModel.findOne({_id:productId})
     res.send(product)

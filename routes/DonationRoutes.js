@@ -19,7 +19,7 @@ const generateReceiptPDF = (name, email, number, donationAmount) => {
       pdfDoc.on("end", () => resolve(Buffer.concat(buffers)));
       pdfDoc.on("error", (error) => reject(error));
 
-      // Add donation receipt header
+      // donation receipt header
       pdfDoc
         .fontSize(18)
         .text('Donation Receipt', { align: 'center' })
@@ -27,21 +27,21 @@ const generateReceiptPDF = (name, email, number, donationAmount) => {
         .text('Thank you for your generous contribution!', { align: 'center' })
         .moveDown();
 
-      // Add recipient information
+      // recipient information
       pdfDoc
         .fontSize(12)
         .text('Donated To', { align: 'center' })
         .text('Yumyard Pvt Ltd', { align: 'center' })
         .moveDown();
 
-      // Add donation information
+      //  donation information
       pdfDoc
         .fontSize(12)
         .text(`Date - ${currentDate}`)
         .text(`Time - ${currentTime}`)
         .moveDown();
 
-      // Add donor details
+      //  donor details
       pdfDoc
         .fontSize(12)
         .text(`Donor Name - ${name}`)
@@ -50,23 +50,23 @@ const generateReceiptPDF = (name, email, number, donationAmount) => {
         .text(`Donation Amount - Rs ${donationAmount}`)
         .moveDown();
 
-      // Add a line for separation
+      //  line for separation
       pdfDoc.moveTo(50, pdfDoc.y).lineTo(550, pdfDoc.y).stroke().moveDown();
 
-      // Add a thank you message
+      // thank you message
       pdfDoc
         .fontSize(12)
         .text('Your contribution is greatly appreciated!', { align: 'center' })
         .moveDown();
 
-      // Add footer with contact information (customize as needed)
+      // footer
       pdfDoc
         .fontSize(10)
         .text('For inquiries, please contact Yumyard Pvt Ltd:',{ align: 'center'})
         .text('Email: info@yumyard.com | Phone: +1 123-456-7890', { align: 'center' })
         .moveDown();
 
-      // Finalize the PDF
+      // pdf
       pdfDoc.end();
     } catch (error) {
       console.log(error);
@@ -80,7 +80,6 @@ const name = req.body.name;
 const email = req.body.email;
 const number = req.body.number;
 const donationAmount = req.body.donationAmount;
-console.log(name,email,number,donationAmount);
 
 const lineItems  =[{price_data:{
     currency:'inr',

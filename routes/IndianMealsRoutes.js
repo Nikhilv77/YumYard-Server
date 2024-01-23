@@ -40,7 +40,6 @@ const deleteIndianMeal = router.post('/deleteindianmeal',async(req,res)=>{
     
     const getIndianMealById = router.post('/getbyid',async(req,res)=>{
       const productId = req.body.productId;
-      console.log(productId);
       try{
         const product = await IndianMeals.findOne({_id:productId})
         res.send(product)

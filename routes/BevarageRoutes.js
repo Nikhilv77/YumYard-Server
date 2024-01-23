@@ -22,7 +22,6 @@ const deleteBevarage = router.post('/deletebevarage',async(req,res)=>{
   
   const getBevarageById = router.post('/getbyid',async(req,res)=>{
     const productId = req.body.productId;
-    console.log(productId);
     try{
       const product = await bevarageModel.findOne({_id:productId})
       res.send(product)

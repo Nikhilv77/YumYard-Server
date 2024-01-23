@@ -41,7 +41,6 @@ const addNewBurger = router.post('/addnewburger',async(req,res)=>{
     
     const getBurgerById = router.post('/getbyid',async(req,res)=>{
       const productId = req.body.productId;
-      console.log(productId);
       try{
         const product = await burgerModel.findOne({_id:productId})
         res.send(product)

@@ -4,7 +4,6 @@ const Router = express.Router();
 const nodemailer = require("nodemailer");
 const cookieParser = require('cookie-parser');
 
-// Use cookie-parser middleware
 Router.use(cookieParser());
 
 
@@ -29,7 +28,6 @@ const userRegister = Router.post("/signup", async (req, res) => {
   try {
     const existingUser = await User.findOne({ email });
     const existingUserPh = await User.findOne({ number });
-    console.log(existingUser);
     if (existingUser || existingUserPh) {
       return res.status(400).json({ message: "User already exists!" });
     }
@@ -47,7 +45,6 @@ const loginInfo = Router.post("/login", async (req, res) => {
   if (email.includes("@")) {
     try {
       const user = await User.find({ email, password });
-      console.log(user);
       if (user.length > 0) {
         const currUser = {
           name: user[0].name,
@@ -219,7 +216,6 @@ const updatePasswordRoute = Router.post('/updatepassword',async(req,res)=>{
 
 const getUserByEmail = Router.post('/getuserbyemail', async(req,res)=>{
   const email = req.body.email;
-  console.log(email);
   try {
     const user = await User.findOne({email:email})
     res.send(user)

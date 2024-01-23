@@ -25,7 +25,7 @@ try {
       orderAmount: order.orderAmount,
       transactionId: order.transactionId,
     })
-    console.log(newOrder);
+   
     await newOrder.save();
     res.send('Order saved Successfully')
 } catch (error) {
