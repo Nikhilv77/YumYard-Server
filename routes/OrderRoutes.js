@@ -26,7 +26,7 @@ const generateReceiptPDF = (user, address, cartItems, totalAmount) => {
       // Current Date and Time
       const currentDate = new Date().toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata' });
       const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Kolkata' });
-      pdfDoc.moveDown().fontSize(12).text(`Date: ${currentDate}, Time: ${currentTime}`, { align: 'right' });
+      pdfDoc.moveDown().fontSize(12).text(`Date: ${currentDate}, Time: ${currentTime}`, { align: 'left' });
 
       // User Information
       pdfDoc.moveDown().fontSize(13);

@@ -30,7 +30,7 @@ const generateReceiptPDF = (name, email, number, donationAmount) => {
       // Add recipient information
       pdfDoc
         .fontSize(12)
-        .text('Donated To -', { align: 'center' })
+        .text('Donated To', { align: 'center' })
         .text('Yumyard Pvt Ltd', { align: 'center' })
         .moveDown();
 
